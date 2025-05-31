@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>التمارين - BoxLife</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header></header>
+    <main>
+        <div id="userDataBox" style="background:#f9f9f9;border-radius:8px;padding:1rem;margin-bottom:2rem;display:none;">
+            <h4 style="color:#ff9800;">بياناتك:</h4>
+            <div><b style="color:#232526;">الاسم:</b> <span id="showFirstName" style="color:#ff9800;"></span></div>
+            <div><b style="color:#232526;">اللقب:</b> <span id="showLastName" style="color:#ff9800;"></span></div>
+            <div><b style="color:#232526;">العمر:</b> <span id="showAge" style="color:#ff9800;"></span></div>
+            <div><b style="color:#232526;">الطول:</b> <span id="showHeight" style="color:#ff9800;"></span> سم</div>
+            <div><b style="color:#232526;">الجنس:</b> <span id="showGender" style="color:#ff9800;"></span></div>
+            <div><b style="color:#232526;">الاختصاص الرياضي:</b> <span id="showSport" style="color:#ff9800;"></span></div>
+        </div>
+        <h2>التمارين</h2>
+        <form id="workoutForm">
+            <label>اسم التمرين: <input type="text" id="workoutName" required></label>
+            <label>عدد الجولات: <input type="number" id="rounds" min="1" required></label>
+            <label>التاريخ: <input type="date" id="workoutDate" required></label>
+            <button type="submit">إضافة تمرين</button>
+        </form>
+        <table id="workoutsTable">
+            <thead>
+                <tr>
+                    <th>اسم التمرين</th>
+                    <th>عدد الجولات</th>
+                    <th>التاريخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ستتم إضافة التمارين هنا -->
+            </tbody>
+        </table>
+    </main>
+    <footer></footer>
+    <script src="main.js"></script>
+    <script>
+        // قاعدة بيانات محلية: جميع المستخدمين في boxlife_all_users
+        function displayUserData(data) {
+            showFirstName.textContent = data.firstName || '';
+            showLastName.textContent = data.lastName || '';
+            showAge.textContent = data.age || '';
+            showHeight.textContent = data.height || '';
+            showGender.textContent = data.gender || '';
+            showSport.textContent = data.sport || '';
+            showUsername.textContent = data.username || '';
+            userDataBox.style.display = 'block';
+        }
+        window.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('boxlife_last_username');
+            if (username) {
+                const data = localStorage.getItem('user_' + username);
+                if (data) {
+                    displayUserData(JSON.parse(data));
+                }
+            }
+        });
+        const workoutForm = document.getElementById('workoutForm');
+        const workoutsTable = document.getElementById('workoutsTable').querySelector('tbody');
+        workoutForm.onsubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('workoutName').value;
+            const rounds = document.getElementById('rounds').value;
+            const date = document.getElementById('workoutDate').value;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${name}</td><td>${rounds}</td><td>${date}</td>`;
+            workoutsTable.appendChild(row);
+            workoutForm.reset();
+        }
+    </script>
+</body>
+</html>

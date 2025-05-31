@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>BoxLife - الصفحة الرئيسية</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- يمكنك حذف كود firebase هنا إذا أردت قاعدة بيانات محلية فقط -->
+</head>
+<body>
+    <header></header>
+    <main>
+        <section>
+            <h2>مرحبًا بك في BoxLife</h2>
+            <p>
+                منصة رقمية متكاملة لمقاتلي K-1، الملاكمة، وMMA تساعدك على تنظيم تدريباتك، نزالاتك، ونظامك الغذائي.<br>
+                واجهة مرنة وسريعة الاستجابة تدعم العربية والفرنسية.
+            </p>
+            <ul>
+                <li>تتبع التمارين اليومية بسهولة</li>
+                <li>تسجيل النزالات والنتائج وتحليل الأداء</li>
+                <li>إدارة النظام الغذائي وحساب السعرات</li>
+        
+                <li>ملف شخصي لمتابعة تقدمك وتعديل بياناتك</li>
+            </ul>
+            <div style="margin-top:2rem;">
+                <a href="dashboard.html" style="background:#ff9800;color:#fff;padding:1rem 2rem;border-radius:8px;text-decoration:none;font-weight:bold;">ابدأ الآن</a>
+            </div>
+        </section>
+        <section style="margin-top:3rem;">
+            <h3>سجل بياناتك الآن</h3>
+            <form id="registerForm" style="max-width:400px;">
+                <label>الاسم: <input type="text" id="regFirstName" required></label>
+                <label>اللقب: <input type="text" id="regLastName" required></label>
+                <label>العمر: <input type="number" id="regAge" min="10" max="100" required></label>
+                <label>الطول (سم): <input type="number" id="regHeight" min="100" max="250" required></label>
+                <label>الجنس:
+                    <select id="regGender" required>
+                        <option value="">اختر</option>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                </label>
+                <label>الاختصاص الرياضي:
+                    <select id="regSport" required>
+                        <option value="">اختر</option>
+                        <option value="K-1">K-1</option>
+                        <option value="ملاكمة">ملاكمة</option>
+                        <option value="MMA">MMA</option>
+                    </select>
+                </label>
+                <label>اسم المستخدم (فريد): <input type="text" id="regUsername" required></label>
+                <button type="submit">تسجيل</button>
+            </form>
+            <div id="registerMsg" style="color:green;margin-top:1rem;display:none;">تم التسجيل بنجاح! يمكنك الآن الدخول إلى ملفك الشخصي.</div>
+            <div id="registerError" style="color:red;margin-top:1rem;display:none;"></div>
+            <div id="userDataBox" style="background:#f9f9f9;border-radius:8px;padding:1rem;margin-top:1.5rem;display:none;">
+                <h4 style="color:#ff9800;">بياناتك:</h4>
+                <div><b style="color:#232526;">الاسم:</b> <span id="showFirstName" style="color:#ff9800;"></span></div>
+                <div><b style="color:#232526;">اللقب:</b> <span id="showLastName" style="color:#ff9800;"></span></div>
+                <div><b style="color:#232526;">العمر:</b> <span id="showAge" style="color:#ff9800;"></span></div>
+                <div><b style="color:#232526;">الطول:</b> <span id="showHeight" style="color:#ff9800;"></span> سم</div>
+                <div><b style="color:#232526;">الجنس:</b> <span id="showGender" style="color:#ff9800;"></span></div>
+                <div><b style="color:#232526;">الاختصاص الرياضي:</b> <span id="showSport" style="color:#ff9800;"></span></div>
+                <div><b style="color:#232526;">اسم المستخدم:</b> <span id="showUsername" style="color:#ff9800;"></span></div>
+            </div>
+        </section>
+    </main>
+    <footer></footer>
+    <script src="main.js"></script>
+    <script>
+        // قاعدة بيانات محلية: كل مستخدم يُخزن في localStorage باسم user_{username}
+        // جميع المستخدمين في مصفوفة boxlife_all_users
+        function saveUserToAllUsers(userData) {
+            let allUsers = [];
+            try {
+                allUsers = JSON.parse(localStorage.getItem('boxlife_all_users')) || [];
+            } catch { allUsers = []; }
+            allUsers = allUsers.filter(u => u.username !== userData.username);
+            allUsers.push(userData);
+            localStorage.setItem('boxlife_all_users', JSON.stringify(allUsers));
+        }
+
+        function displayUserData(data) {
+            showFirstName.textContent = data.firstName || '';
+            showLastName.textContent = data.lastName || '';
+            showAge.textContent = data.age || '';
+            showHeight.textContent = data.height || '';
+            showGender.textContent = data.gender || '';
+            showSport.textContent = data.sport || '';
+            showUsername.textContent = data.username || '';
+            userDataBox.style.display = 'block';
+        }
+
+        // تحقق عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('boxlife_last_username');
+            if (username) {
+                const data = localStorage.getItem('user_' + username);
+                if (data) {
+                    displayUserData(JSON.parse(data));
+                }
+            }
+        });
+
+        registerForm.onsubmit = function(e) {
+            e.preventDefault();
+            const userData = {
+                firstName: document.getElementById('regFirstName').value,
+                lastName: document.getElementById('regLastName').value,
+                age: document.getElementById('regAge').value,
+                height: document.getElementById('regHeight').value,
+                gender: document.getElementById('regGender').value,
+                sport: document.getElementById('regSport').value,
+                username: document.getElementById('regUsername').value.trim()
+            };
+            if (!userData.username) {
+                registerError.textContent = "يرجى إدخال اسم مستخدم.";
+                registerError.style.display = 'block';
+                registerMsg.style.display = 'none';
+                return;
+            }
+            if (localStorage.getItem('user_' + userData.username)) {
+                registerError.textContent = "اسم المستخدم مستعمل مسبقًا.";
+                registerError.style.display = 'block';
+                registerMsg.style.display = 'none';
+                return;
+            }
+            localStorage.setItem('user_' + userData.username, JSON.stringify(userData));
+            saveUserToAllUsers(userData);
+            registerMsg.style.display = 'block';
+            registerError.style.display = 'none';
+            registerForm.reset();
+            displayUserData(userData);
+            localStorage.setItem('boxlife_last_username', userData.username);
+        }
+    </script>
+</body>
+</html>

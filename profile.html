@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>الملف الشخصي - BoxLife</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden { display: none; }
+        .profile-data label { display: block; margin: 0.5rem 0; }
+        .profile-view { background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        .profile-view span { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header></header>
+    <main>
+        <h2>الملف الشخصي</h2>
+        <div id="authSection">
+            <form id="loginForm">
+                <label>اسم المستخدم: <input type="text" id="username" required></label>
+                <label>كلمة المرور: <input type="password" id="password" required></label>
+                <button type="submit">تسجيل الدخول / إنشاء حساب</button>
+            </form>
+        </div>
+        <div id="profileSection" class="hidden">
+            <!-- يمكنك إضافة نفس صندوق البيانات أعلى الصفحة إن أردت -->
+            <div id="profileView" class="profile-view hidden">
+                <div><span>الاسم:</span> <span id="viewFirstName"></span></div>
+                <div><span>اللقب:</span> <span id="viewLastName"></span></div>
+                <div><span>العمر:</span> <span id="viewAge"></span></div>
+                <div><span>الطول:</span> <span id="viewHeight"></span> سم</div>
+                <div><span>الجنس:</span> <span id="viewGender"></span></div>
+                <div><span>الاختصاص الرياضي:</span> <span id="viewSport"></span></div>
+                <button id="editBtn" type="button">تعديل البيانات</button>
+            </div>
+            <form id="profileForm" class="profile-data hidden">
+                <label>الاسم: <input type="text" id="firstName" required></label>
+                <label>اللقب: <input type="text" id="lastName" required></label>
+                <label>العمر: <input type="number" id="age" min="10" max="100" required></label>
+                <label>الطول (سم): <input type="number" id="height" min="100" max="250" required></label>
+                <label>الجنس:
+                    <select id="gender" required>
+                        <option value="">اختر</option>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                </label>
+                <label>الاختصاص الرياضي:
+                    <select id="sport" required>
+                        <option value="">اختر</option>
+                        <option value="K-1">K-1</option>
+                        <option value="ملاكمة">ملاكمة</option>
+                        <option value="MMA">MMA</option>
+                    </select>
+                </label>
+                <button type="submit">حفظ البيانات</button>
+            </form>
+            <button id="logoutBtn">تسجيل الخروج</button>
+        </div>
+    </main>
+    <footer></footer>
+    <script src="main.js"></script>
+    <script>
+        const authSection = document.getElementById('authSection');
+        const profileSection = document.getElementById('profileSection');
+        const loginForm = document.getElementById('loginForm');
+        const profileForm = document.getElementById('profileForm');
+        const profileView = document.getElementById('profileView');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const editBtn = document.getElementById('editBtn');
+        const viewFirstName = document.getElementById('viewFirstName');
+        const viewLastName = document.getElementById('viewLastName');
+        const viewAge = document.getElementById('viewAge');
+        const viewHeight = document.getElementById('viewHeight');
+        const viewGender = document.getElementById('viewGender');
+        const viewSport = document.getElementById('viewSport');
+        function saveUserData(data) {
+            localStorage.setItem('boxlife_profile', JSON.stringify(data));
+        }
+        function loadUserData() {
+            const data = localStorage.getItem('boxlife_profile');
+            return data ? JSON.parse(data) : null;
+        }
+        function showProfileView(data) {
+            viewFirstName.textContent = data.firstName || '';
+            viewLastName.textContent = data.lastName || '';
+            viewAge.textContent = data.age || '';
+            viewHeight.textContent = data.height || '';
+            viewGender.textContent = data.gender || '';
+            viewSport.textContent = data.sport || '';
+            profileView.classList.remove('hidden');
+            profileForm.classList.add('hidden');
+        }
+        function fillProfileForm(data) {
+            document.getElementById('firstName').value = data.firstName || '';
+            document.getElementById('lastName').value = data.lastName || '';
+            document.getElementById('age').value = data.age || '';
+            document.getElementById('height').value = data.height || '';
+            document.getElementById('gender').value = data.gender || '';
+            document.getElementById('sport').value = data.sport || '';
+        }
+        loginForm.onsubmit = function(e) {
+            e.preventDefault();
+            authSection.classList.add('hidden');
+            profileSection.classList.remove('hidden');
+            let userData = loadUserData();
+            if (userData && userData.firstName) {
+                showProfileView(userData);
+            } else {
+                profileForm.classList.remove('hidden');
+                profileView.classList.add('hidden');
+            }
+        };
+        profileForm.onsubmit = function(e) {
+            e.preventDefault();
+            const userData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                age: document.getElementById('age').value,
+                height: document.getElementById('height').value,
+                gender: document.getElementById('gender').value,
+                sport: document.getElementById('sport').value
+            };
+            saveUserData(userData);
+            showProfileView(userData);
+            alert('تم حفظ البيانات بنجاح!');
+        };
+        editBtn.onclick = function() {
+            const userData = loadUserData() || {};
+            fillProfileForm(userData);
+            profileForm.classList.remove('hidden');
+            profileView.classList.add('hidden');
+        };
+        logoutBtn.onclick = function() {
+            authSection.classList.remove('hidden');
+            profileSection.classList.add('hidden');
+        };
+    </script>
+</body>
+</html>

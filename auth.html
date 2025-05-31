@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>BoxLife - دخول المستخدم</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container { max-width: 420px; margin: 3rem auto; background: rgba(255,255,255,0.10); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 24px #0006; }
+        .auth-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; }
+        .auth-tabs button { flex: 1; padding: 0.7rem; font-size: 1.1rem; border: none; border-radius: 8px; background: #232526; color: #fff; cursor: pointer; }
+        .auth-tabs button.active { background: #ff9800; color: #232526; }
+        .hidden { display: none; }
+        .success-msg { color: #4caf50; font-weight: bold; margin-top: 1rem; }
+        .error-msg { color: #f44336; font-weight: bold; margin-top: 1rem; }
+        .user-info-box {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 420px;
+            color: #232526;
+            box-shadow: 0 4px 24px #0003;
+        }
+        .user-info-box h3 { color: #ff9800; }
+        .user-info-box span { color: #ff9800; }
+        .logout-btn {
+            background: #ff9800;
+            color: #232526;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem 2rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .logout-btn:hover { background: #232526; color: #ff9800; }
+    </style>
+</head>
+<body>
+    <header></header>
+    <main>
+        <div id="authContainer" class="auth-container">
+            <div class="auth-tabs">
+                <button id="loginTab" class="active" type="button">تسجيل الدخول</button>
+                <button id="registerTab" type="button">إنشاء حساب</button>
+            </div>
+            <form id="loginForm">
+                <label>اسم المستخدم: <input type="text" id="loginUsername" required></label>
+                <label>كلمة المرور: <input type="password" id="loginPassword" required></label>
+                <button type="submit">دخول</button>
+                <div id="loginError" class="error-msg" style="display:none;"></div>
+            </form>
+            <form id="registerForm" class="hidden">
+                <label>اسم المستخدم: <input type="text" id="regUsername" required></label>
+                <label>كلمة المرور: <input type="password" id="regPassword" required></label>
+                <label>الاسم: <input type="text" id="regFirstName" required></label>
+                <label>اللقب: <input type="text" id="regLastName" required></label>
+                <label>العمر: <input type="number" id="regAge" min="10" max="100" required></label>
+                <label>الطول (سم): <input type="number" id="regHeight" min="100" max="250" required></label>
+                <label>الجنس:
+                    <select id="regGender" required>
+                        <option value="">اختر</option>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                </label>
+                <label>الاختصاص الرياضي:
+                    <select id="regSport" required>
+                        <option value="">اختر</option>
+                        <option value="K-1">K-1</option>
+                        <option value="ملاكمة">ملاكمة</option>
+                        <option value="MMA">MMA</option>
+                    </select>
+                </label>
+                <button type="submit">تسجيل</button>
+                <div id="registerMsg" class="success-msg" style="display:none;">تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.</div>
+                <div id="registerError" class="error-msg" style="display:none;"></div>
+            </form>
+        </div>
+        <div id="userInfoBox" class="user-info-box" style="display:none;">
+            <h3>مرحبًا <span id="userWelcome"></span>!</h3>
+            <div><b>الاسم:</b> <span id="infoFirstName"></span></div>
+            <div><b>اللقب:</b> <span id="infoLastName"></span></div>
+            <div><b>العمر:</b> <span id="infoAge"></span></div>
+            <div><b>الطول:</b> <span id="infoHeight"></span> سم</div>
+            <div><b>الجنس:</b> <span id="infoGender"></span></div>
+            <div><b>الاختصاص الرياضي:</b> <span id="infoSport"></span></div>
+            <div style="margin-top:1.5rem;">
+                <a href="dashboard.html" class="logout-btn" style="background:#ff9800;">الذهاب إلى لوحة التحكم</a>
+                <button id="logoutBtn" class="logout-btn" type="button">تسجيل الخروج</button>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+    <script src="main.js"></script>
+    <!-- Firebase CDN -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // إعدادات Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCUHtEGMXltNMLTPewKgjeG1uCUp4XfANM",
+            authDomain: "boxli-f6f56.firebaseapp.com",
+            projectId: "boxli-f6f56",
+            storageBucket: "boxli-f6f56.appspot.com",
+            messagingSenderId: "947272458754",
+            appId: "1:947272458754:web:e7a1b54675141d2a2dbd1b",
+            measurementId: "G-7C13JLNSK1"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Tabs
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const authContainer = document.getElementById('authContainer');
+        const userInfoBox = document.getElementById('userInfoBox');
+        const userWelcome = document.getElementById('userWelcome');
+        const infoFirstName = document.getElementById('infoFirstName');
+        const infoLastName = document.getElementById('infoLastName');
+        const infoAge = document.getElementById('infoAge');
+        const infoHeight = document.getElementById('infoHeight');
+        const infoGender = document.getElementById('infoGender');
+        const infoSport = document.getElementById('infoSport');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        loginTab.onclick = function() {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+        };
+        registerTab.onclick = function() {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        };
+
+        // تسجيل مستخدم جديد (Firebase)
+        registerForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('regUsername').value.trim() + "@boxlife.com";
+            const password = document.getElementById('regPassword').value;
+            const username = document.getElementById('regUsername').value.trim();
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, password);
+                // حفظ بيانات إضافية في Firestore
+                await setDoc(doc(db, "users", cred.user.uid), {
+                    username,
+                    firstName: document.getElementById('regFirstName').value,
+                    lastName: document.getElementById('regLastName').value,
+                    age: document.getElementById('regAge').value,
+                    height: document.getElementById('regHeight').value,
+                    gender: document.getElementById('regGender').value,
+                    sport: document.getElementById('regSport').value
+                });
+                document.getElementById('registerMsg').style.display = 'block';
+                document.getElementById('registerError').style.display = 'none';
+                registerForm.reset();
+            } catch (err) {
+                document.getElementById('registerError').textContent = 'حدث خطأ أثناء التسجيل: ' + (err.code === "auth/email-already-in-use" ? "اسم المستخدم مستعمل مسبقًا." : err.message);
+                document.getElementById('registerError').style.display = 'block';
+                document.getElementById('registerMsg').style.display = 'none';
+            }
+        };
+
+        // تسجيل الدخول (Firebase)
+        loginForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const email = username + "@boxlife.com";
+            const password = document.getElementById('loginPassword').value;
+            try {
+                const cred = await signInWithEmailAndPassword(auth, email, password);
+                // جلب بيانات المستخدم من Firestore
+                const userDoc = await getDoc(doc(db, "users", cred.user.uid));
+                if (userDoc.exists()) {
+                    showUserInfo(userDoc.data());
+                }
+            } catch (err) {
+                document.getElementById('loginError').textContent = 'بيانات الدخول غير صحيحة.';
+                document.getElementById('loginError').style.display = 'block';
+            }
+        };
+
+        // عرض بيانات المستخدم بعد الدخول
+        function showUserInfo(user) {
+            userWelcome.textContent = user.firstName;
+            infoFirstName.textContent = user.firstName;
+            infoLastName.textContent = user.lastName;
+            infoAge.textContent = user.age;
+            infoHeight.textContent = user.height;
+            infoGender.textContent = user.gender;
+            infoSport.textContent = user.sport;
+            authContainer.style.display = 'none';
+            userInfoBox.style.display = 'block';
+        }
+
+        // تسجيل الخروج (Firebase)
+        logoutBtn.onclick = async function() {
+            await signOut(auth);
+            userInfoBox.style.display = 'none';
+            authContainer.style.display = 'block';
+        };
+
+        // عند تحميل الصفحة: إذا كان المستخدم مسجل دخول، أظهر بياناته مباشرة
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    showUserInfo(userDoc.data());
+                }
+            } else {
+                userInfoBox.style.display = 'none';
+                authContainer.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+body {
+    font-family: 'Cairo', Arial, sans-serif;
+    direction: rtl;
+    margin: 0;
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    color: #fff;
+    min-height: 100vh;
+    background-attachment: fixed;
+}
+header {
+    background: rgba(34,34,34,0.95);
+    color: #fff;
+    padding: 1.5rem 1rem 1rem 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+header h1 {
+    font-family: 'Cairo', Arial, sans-serif;
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+    margin: 0 0 0.5rem 0;
+    color: #ff9800;
+    text-shadow: 1px 2px 8px #000;
+}
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    flex-wrap: wrap;
+}
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+nav a:hover, nav a.active {
+    background: #ff9800;
+    color: #232526;
+    box-shadow: 0 2px 8px #ff9800a0;
+}
+main {
+    padding: 2.5rem 1rem 2rem 1rem;
+    min-height: 70vh;
+    background: url('images/boxing-bg.jpg') no-repeat center top/cover, linear-gradient(135deg, #232526 0%, #414345 100%);
+    border-radius: 0 0 32px 32px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    position: relative;
+    z-index: 1;
+}
+.dashboard-cards {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.card {
+    background: rgba(255,255,255,0.10);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px #0006;
+    padding: 2rem 1.5rem;
+    min-width: 220px;
+    flex: 1 1 260px;
+    color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+.card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 8px 32px #ff9800a0;
+    background: rgba(255,152,0,0.13);
+}
+.card h3 {
+    color: #ff9800;
+    margin-top: 0;
+}
+.card a {
+    display: inline-block;
+    margin-top: 1rem;
+    background: #ff9800;
+    color: #232526;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+.card a:hover {
+    background: #fff;
+    color: #ff9800;
+}
+form label {
+    display: block;
+    margin: 0.7rem 0 0.2rem 0;
+    font-weight: bold;
+}
+form input, form select, form button {
+    margin-top: 0.2rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+form input, form select {
+    background: #232526;
+    color: #fff;
+    border: 1px solid #ff9800;
+}
+form button {
+    background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+    color: #232526;
+    border: none;
+    margin-top: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px #ff9800a0;
+    transition: background 0.2s, color 0.2s;
+}
+form button:hover {
+    background: #fff;
+    color: #ff9800;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    background: rgba(255,255,255,0.10);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px #0004;
+}
+th, td {
+    border: 1px solid #ff9800;
+    padding: 0.8rem;
+    text-align: center;
+    color: #fff;
+    font-size: 1.05rem;
+}
+th {
+    background: #ff9800;
+    color: #232526;
+    font-weight: bold;
+}
+tbody tr:nth-child(even) {
+    background: rgba(255,255,255,0.07);
+}
+#userDataBox, .profile-view {
+    background: rgba(255,255,255,0.13);
+    padding: 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px #ff9800a0;
+    color: #fff;
+}
+#userDataBox h4, .profile-view h4 {
+    color: #ff9800;
+    margin-top: 0;
+}
+#userDataBox b, .profile-view span {
+    color: #ffd54f !important;
+}
+#registerMsg {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+footer {
+    background: rgba(34,34,34,0.97);
+    color: #fff;
+    text-align: center;
+    padding: 1.2rem;
+    font-size: 1.1rem;
+    border-radius: 32px 32px 0 0;
+    box-shadow: 0 -4px 16px #0008;
+    margin-top: 2rem;
+}
+@media (max-width: 900px) {
+    .dashboard-cards { flex-direction: column; gap: 1.5rem; }
+    main { padding: 1rem; }
+}
+@media (max-width: 600px) {
+    header h1 { font-size: 1.3rem; }
+    nav ul { gap: 0.5rem; }
+    .card { min-width: 160px; padding: 1rem; }
+    main { padding: 0.5rem; }
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('images/boxer-shadow.png') no-repeat left bottom/300px, url('images/mma-gloves.png') no-repeat right top/220px;
+    opacity: 0.08;
+    z-index: 0;
+    pointer-events: none;
+}
+main, th, td, label, input, select, button, .card, .profile-view, #userDataBox, #registerMsg {
+    color: #fff !important;
+}
+/* عناصر بيانات المستخدم */
+#userDataBox b, .profile-view span {
+    color: #ffd54f !important;
+}
+/* نصوص داخل بطاقات */
+.card p, .card a, .card h3 {
+    color: #fff !important;
+}
+/* نصوص الجدول */
+th {
+    color: #232526 !important;
+}
+td {
+    color: #fff !important;
+}
+/* نصوص الفوتر والهيدر */
+header, footer {
+    color: #fff !important;
+}

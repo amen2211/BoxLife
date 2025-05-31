@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <!-- ...existing code... -->
+</head>
+<body>
+    <!-- ...existing code... -->
+    <script src="main.js"></script>
+    <script>
+        // قاعدة بيانات محلية: جميع المستخدمين في boxlife_all_users
+        function displayUserData(data) {
+            showFirstName.textContent = data.firstName || '';
+            showLastName.textContent = data.lastName || '';
+            showAge.textContent = data.age || '';
+            showHeight.textContent = data.height || '';
+            showGender.textContent = data.gender || '';
+            showSport.textContent = data.sport || '';
+            showUsername.textContent = data.username || '';
+            userDataBox.style.display = 'block';
+        }
+        window.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('boxlife_last_username');
+            if (username) {
+                const data = localStorage.getItem('user_' + username);
+                if (data) {
+                    displayUserData(JSON.parse(data));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
