@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>النزالات - BoxLife</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header></header>
+    <main>
+        <div id="userDataBox" style="background:#f9f9f9;border-radius:8px;padding:1rem;margin-bottom:2rem;display:none;">
+            <h4 style="color:#ff9800;">بياناتك:</h4>
+            <div><b style="color:#232526;">الاسم:</b> <span id="showFirstName" style="color:#ff9800;"></span></div>
+            <div><b style="color:#232526;">اللقب:</b> <span id="showLastName" style="color:#ff9800;"></span></div>
+            <div><b style="color:#232526;">العمر:</b> <span id="showAge" style="color:#ff9800;"></span></div>
+            <div><b style="color:#232526;">الطول:</b> <span id="showHeight" style="color:#ff9800;"></span> سم</div>
+            <div><b style="color:#232526;">الجنس:</b> <span id="showGender" style="color:#ff9800;"></span></div>
+            <div><b style="color:#232526;">الاختصاص الرياضي:</b> <span id="showSport" style="color:#ff9800;"></span></div>
+        </div>
+        <h2>النزالات</h2>
+        <form id="fightForm">
+            <label>اسم الخصم: <input type="text" id="opponent" required></label>
+            <label>التاريخ: <input type="date" id="fightDate" required></label>
+            <label>النتيجة:
+                <select id="result" required>
+                    <option value="">اختر</option>
+                    <option value="فوز">فوز</option>
+                    <option value="خسارة">خسارة</option>
+                    <option value="تعادل">تعادل</option>
+                </select>
+            </label>
+            <button type="submit">إضافة نزال</button>
+        </form>
+        <table id="fightsTable">
+            <thead>
+                <tr>
+                    <th>اسم الخصم</th>
+                    <th>التاريخ</th>
+                    <th>النتيجة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ستتم إضافة النزالات هنا -->
+            </tbody>
+        </table>
+    </main>
+    <footer></footer>
+    <script src="main.js"></script>
+    <script>
+        // قاعدة بيانات محلية: جميع المستخدمين في boxlife_all_users
+        function displayUserData(data) {
+            showFirstName.textContent = data.firstName || '';
+            showLastName.textContent = data.lastName || '';
+            showAge.textContent = data.age || '';
+            showHeight.textContent = data.height || '';
+            showGender.textContent = data.gender || '';
+            showSport.textContent = data.sport || '';
+            showUsername.textContent = data.username || '';
+            userDataBox.style.display = 'block';
+        }
+        window.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('boxlife_last_username');
+            if (username) {
+                const data = localStorage.getItem('user_' + username);
+                if (data) {
+                    displayUserData(JSON.parse(data));
+                }
+            }
+        });
+        const fightForm = document.getElementById('fightForm');
+        const fightsTable = document.getElementById('fightsTable').querySelector('tbody');
+        fightForm.onsubmit = function(e) {
+            e.preventDefault();
+            const opponent = document.getElementById('opponent').value;
+            const date = document.getElementById('fightDate').value;
+            const result = document.getElementById('result').value;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${opponent}</td><td>${date}</td><td>${result}</td>`;
+            fightsTable.appendChild(row);
+            fightForm.reset();
+        }
+    </script>
+</body>
+</html>
